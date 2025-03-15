@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Search, Eye, BookOpen, Loader2, CircleChevronLeft, Play, Pause, X, LightbulbOff, Lightbulb, BookOpenmark } from "lucide-react";
+import { Search, Eye, BookOpen, Loader2, CircleChevronLeft, Play, Pause, X, LightbulbOff, Lightbulb, BookOpenText } from "lucide-react";
 
 const QuranFinder = () => {
   const [surahs, setSurahs] = useState([]);
@@ -16,7 +16,7 @@ const QuranFinder = () => {
   const [playingVerse, setPlayingVerse] = useState(null);
   const [activeQari, setActiveQari] = useState("01");
   const [darkMode, setDarkMode] = useState(false);
-  const [BookOpenmarks, setBookOpenmarks] = useState([]);
+  const [BookOpenMarks, setBookOpenMarks] = useState([]);
 
   // Skema warna berdasarkan mode gelap
   const colors = darkMode
@@ -24,14 +24,14 @@ const QuranFinder = () => {
         primary: "bg-blue-900",
         primaryHover: "bg-blue-800",
         primaryText: "text-blue-400",
-        secondary: "bg-gray-700",
-        secondaryHover: "bg-gray-600",
+        secondary: "bg-grey-1000",
+        secondaryHover: "bg-blue-1000",
         bg: "bg-gray-800",
-        cardBg: "bg-gray-700",
+        cardBg: "bg-grey-600",
         textPrimary: "text-gray-100",
-        textSecondary: "text-gray-300",
-        textTertiary: "text-gray-400",
-        border: "border-gray-600",
+        textSecondary: "text-yellow-300",
+        textTertiary: "text-yellow-600",
+        border: "border-yellow-200",
         highlight: "bg-blue-950",
         arabic: "text-yellow-300",
       }
@@ -41,21 +41,21 @@ const QuranFinder = () => {
         primaryText: "text-blue-700",
         secondary: "bg-gray-200",
         secondaryHover: "bg-gray-300",
-        bg: "bg-gray-100",
+        bg: "bg-blue-100",
         cardBg: "bg-white",
         textPrimary: "text-gray-900",
-        textSecondary: "text-gray-700",
-        textTertiary: "text-gray-600",
+        textSecondary: "text-blue-400",
+        textTertiary: "text-blue-600",
         border: "border-gray-300",
         highlight: "bg-blue-100",
         arabic: "text-blue-900",
       };
 
-  // Muat BookOpenmark dari localStorage
+  // Muat BookOpenText dari localStorage
   useEffect(() => {
-    const savedBookOpenmarks = localStorage.getItem("quranBookOpenmarks");
-    if (savedBookOpenmarks) {
-      setBookOpenmarks(JSON.parse(savedBookOpenmarks));
+    const savedBookOpenMarks = localStorage.getItem("quranBookOpenMarks");
+    if (savedBookOpenMarks) {
+      setBookOpenMarks(JSON.parse(savedBookOpenMarks));
     }
 
     // Periksa preferensi tema yang disimpan
@@ -65,10 +65,10 @@ const QuranFinder = () => {
     }
   }, []);
 
-  // Simpan BookOpenmarks ke localStorage
+  // Simpan BookOpenMarks ke localStorage
   useEffect(() => {
-    localStorage.setItem("quranBookOpenmarks", JSON.stringify(BookOpenmarks));
-  }, [BookOpenmarks]);
+    localStorage.setItem("quranBookOpenMarks", JSON.stringify(BookOpenMarks));
+  }, [BookOpenMarks]);
 
   // Save theme preference
   useEffect(() => {
@@ -213,22 +213,22 @@ const QuranFinder = () => {
     setDarkMode(!darkMode);
   };
 
-  // Toggle BookOpenmark
-  const toggleBookOpenmark = (verseId) => {
+  // Toggle BookOpenText
+  const toggleBookOpenMark = (verseId) => {
     const surahId = selectedSurah.nomor;
-    const BookOpenmarkId = `${surahId}-${verseId}`;
+    const BookOpenMarkId = `${surahId}-${verseId}`;
 
-    if (BookOpenmarks.includes(BookOpenmarkId)) {
-      setBookOpenmarks(BookOpenmarks.filter((id) => id !== BookOpenmarkId));
+    if (BookOpenMarks.includes(BookOpenMarkId)) {
+      setBookOpenMarks(BookOpenMarks.filter((id) => id !== BookOpenMarkId));
     } else {
-      setBookOpenmarks([...BookOpenmarks, BookOpenmarkId]);
+      setBookOpenMarks([...BookOpenMarks, BookOpenMarkId]);
     }
   };
 
-  // Check if verse is BookOpenmarked
-  const isBookOpenmarked = (verseId) => {
+  // Check if verse is BookOpenMarked
+  const isBookOpenMarked = (verseId) => {
     const surahId = selectedSurah.nomor;
-    return BookOpenmarks.includes(`${surahId}-${verseId}`);
+    return BookOpenMarks.includes(`${surahId}-${verseId}`);
   };
 
   // Format nomor ayat to include leading zeros
@@ -292,9 +292,10 @@ const QuranFinder = () => {
           <>
           <div className="mb-10 text-center">
               <div className="inline-block relative mb-4">
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-amber-500 blur-lg opacity-20 rounded-full"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-amber-500 blur-lg opacity-20 rounded-full"></div>
                 <div className={`relative z-10 ${colors.textPrimary} font-arabic text-5xl mb-2`}>Al-Quran Digital</div>
                 <h1 className={`text-4xl font-bold ${colors.primaryText} mb-2`}>----------------------------</h1>
+                <p className={`${colors.textSecondary} text-lg mt-2 max-w-xl mx-auto`}>|Noval Adiya Putra|</p>
               </div>
             </div>
 
@@ -395,8 +396,8 @@ const QuranFinder = () => {
                       <div className="flex justify-between items-start mb-4">
                         <div className={`w-10 h-10 flex-shrink-0 ${colors.secondary} rounded-full flex items-center justify-center ${colors.primaryText} text-sm font-medium`}>{formatAyatNumber(ayat.nomorAyat, surahDetail.jumlahAyat)}</div>
                         <div className="flex items-center gap-2">
-                          <button onClick={() => toggleBookOpenmark(ayat.nomorAyat)} className={`p-2 rounded-full ${isBookOpenmarked(ayat.nomorAyat) ? "bg-amber-100 text-amber-600" : `${colors.secondary} ${colors.textSecondary}`}`}>
-                            <BookOpenmark className={`h-4 w-4 ${isBookOpenmarked(ayat.nomorAyat) ? "fill-amber-600" : ""}`} />
+                          <button onClick={() => toggleBookOpenMark(ayat.nomorAyat)} className={`p-2 rounded-full ${isBookOpenMarked(ayat.nomorAyat) ? "bg-amber-100 text-amber-600" : `${colors.secondary} ${colors.textSecondary}`}`}>
+                            <BookOpenText className={`h-4 w-4 ${isBookOpenMarked(ayat.nomorAyat) ? "fill-amber-600" : ""}`} />
                           </button>
                           <button
                             onClick={() => (playingVerse === ayat.nomorAyat ? stopAudio() : playVerseAudio(ayat.nomorAyat, ayat.audio[activeQari]))}
@@ -409,10 +410,8 @@ const QuranFinder = () => {
 
                       <div className={`p-6 rounded-xl ${colors.highlight} mb-4 border ${colors.border}`}>
                         <p className={`text-right font-arabic text-2xl leading-loose ${colors.arabic}`}>{ayat.teksArab}</p>
+                        <p className={`text-right text-sm italic mb-3 ${colors.textTertiary}`}>{ayat.teksLatin}</p>
                       </div>
-
-                      <p className={`text-sm italic mb-3 ${colors.textTertiary}`}>{ayat.teksLatin}</p>
-
                       <p className={`${colors.textPrimary} leading-relaxed`}>{ayat.teksIndonesia}</p>
                     </div>
                   ))}
