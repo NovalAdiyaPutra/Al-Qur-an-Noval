@@ -44,12 +44,43 @@ const QuranFinder = () => {
         bg: "bg-blue-100",
         cardBg: "bg-white",
         textPrimary: "text-gray-900",
-        textSecondary: "text-blue-400",
-        textTertiary: "text-blue-600",
+        textSecondary: "text-grey-400",
+        textTertiary: "text-grey-600",
         border: "border-gray-300",
         highlight: "bg-blue-100",
         arabic: "text-blue-900",
       };
+    
+  // State untuk Hijriah & Jadwal Sholat
+  const [hijriahDate, setHijriahDate] = useState("");
+  const [prayerTimes, setPrayerTimes] = useState(null);
+
+  // Ambil data Hijriah & jadwal sholat
+  useEffect(() => {
+    const fetchHijriaAndPray = async () => {
+      try {
+        const hijriaRes = await fetch("https://api.myquran.com/v2/cal/hijr?adj=-1");
+        const hijriaData = await hijriaRes.json();
+
+        const date = new Date();
+        const getCurDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+        const prayRes = await fetch(`https://api.myquran.com/v2/sholat/jadwal/0412/${getCurDate}`);
+        const prayData = await prayRes.json();
+
+        if (hijriaData.status && prayData.status) {
+          setHijriahDate(hijriaData.data.date[1]);
+          setPrayerTimes(prayData.data.jadwal);
+        } else {
+          throw new Error("Gagal mengambil data Hijriah & jadwal sholat.");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchHijriaAndPray();
+  }, []);
+
 
   // Muat BookOpenText dari localStorage
   useEffect(() => {
@@ -299,6 +330,22 @@ const QuranFinder = () => {
               </div>
             </div>
 
+            <div className={`p-4 mb-6 ${darkMode ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
+              {/* Bagian Hijriah dan Jadwal Sholat */}
+              <div className="mb-4 flex flex-col items-center">
+                <div className="p-3 rounded-lg shadow text-center text-antique-blue font-merriweather text-xl font-semibold underline max-w-52">
+                  Waktu Sholat
+                </div>
+                {hijriahDate && prayerTimes ? (
+                  <marquee className="text-lg font-semibold max-w-xl">
+                    📅 {hijriahDate} - ☀ Subuh: {prayerTimes.subuh} WIB - 🌤 Dhuha: {prayerTimes.dhuha} WIB - ⛅ Dzuhur: {prayerTimes.dzuhur} WIB - 🌓 Ashar: {prayerTimes.ashar} WIB - 🌒 Maghrib: {prayerTimes.maghrib} WIB - 🌚 Isya: {prayerTimes.isya} WIB
+                  </marquee>
+                ) : (
+                  <p>Fetching Hijriah & Prayer Times...</p>
+                )}
+              </div>
+            </div>
+
             <div className="w-4/12 overflow-y-auto flex flex-col gap-3 pr-3 pb-3">
               <div className="relative">
                 <input
@@ -487,4 +534,4 @@ const QuranFinder = () => {
   );
 };
 
-export default QuranFinder; 
+export default QuranFinder;
