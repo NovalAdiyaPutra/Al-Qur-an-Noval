@@ -326,7 +326,7 @@ const QuranFinder = () => {
                 <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-amber-500 blur-lg opacity-20 rounded-full"></div>
                 <div className={`relative z-10 ${colors.textPrimary} font-arabic text-5xl mb-2`}>Al-Quran Digital</div>
                 <h1 className={`text-4xl font-bold ${colors.primaryText} mb-2`}>----------------------------</h1>
-                <p className={`${colors.textSecondary} text-lg mt-2 max-w-xl mx-auto`}>|Noval Adiya Putra|</p>
+                <p className={`${colors.textSecondary} text-lg mt-2 max-w-xl mx-auto`}>|Noval Adiya Putra👦|</p>
               </div>
             </div>
 
